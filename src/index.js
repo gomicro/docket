@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { App } from './app'
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter forceRefresh={true}>
     <App />
   </BrowserRouter>,
   document.getElementById('root'),
