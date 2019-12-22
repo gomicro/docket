@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 
+import { Auth } from '../../client'
+
 export const Logout = () => {
   useEffect(() => {
-    // remove the token
+    Auth.clearToken()
   }, [])
 
   return <Redirect to='/' />
