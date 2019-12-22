@@ -7,6 +7,8 @@ BASE_URL ?= http://localhost:8001
 ANIMATIONS ?= true
 GIT_SHORT_COMMIT_HASH := $(shell git rev-parse --short HEAD)
 
+GH_URL := 'https://api.github.com'
+
 NO_COLOR := \033[0m
 INFO_COLOR := \033[0;36m
 
@@ -15,7 +17,8 @@ all: run
 
 .PHONY: build
 build: clean ## Build the project
-	GIT_HASH=$(GIT_SHORT_COMMIT_HASH) npx webpack -p
+	GH_URL=$(GH_URL) \
+	npx webpack -p
 
 .PHONY: clean
 clean: ## Cleanup all running and generated items
@@ -27,7 +30,8 @@ clean: ## Cleanup all running and generated items
 
 .PHONY: dev
 dev: ## Run the dev test server
-	GIT_HASH=$(GIT_SHORT_COMMIT_HASH) npx webpack-dev-server --port 8001 --hot --progress
+	GH_URL=$(GH_URL) \
+	npx webpack-dev-server --port 8001 --hot --progress
 
 .PHONY: help
 help:  ## Show This Help
