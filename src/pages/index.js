@@ -1,9 +1,10 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
+import { Auth } from '../client'
+
 import { Header } from '../components/header'
 
-import { Github } from './github'
 import { Home } from './home'
 import { Logout } from './logout'
 import { Login } from './login'
@@ -13,9 +14,8 @@ export const Pages = () => (
   <>
     <Header />
     <Switch>
-      <Route exact path='/' component={Home} />
+      <AuthedRoute exact path='/' component={Home} />
 
-      <Route path='/github' component={Github} />
       <Route path='/login' component={Login} />
       <Route path='/logout' component={Logout} />
 
@@ -24,3 +24,10 @@ export const Pages = () => (
     </Switch>
   </>
 )
+
+const AuthedRoute = ({ component: Component, ...rest }) =>
+  Auth.authed() ? (
+    <Route component={Component} {...rest} />
+  ) : (
+    <Redirect to='/login' />
+  )
