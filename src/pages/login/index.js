@@ -1,4 +1,7 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
+
+import { Auth } from '../../client'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -26,13 +29,21 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const Login = () => {
+  const history = useHistory()
   const classes = useStyles()
+
+  const handleAuth = () => {
+    const token = document.getElementById('auth-token').value
+    Auth.setToken(token)
+
+    history.push('/')
+  }
 
   return (
     <Card className={classes.card}>
       <CardContent>
         <form className={classes.authForm} noValidate autoComplete='off'>
-          <TextField required id='standard-required' label='Auth Token' />
+          <TextField required id='auth-token' label='Auth Token' />
         </form>
       </CardContent>
       <CardActions>
@@ -40,6 +51,7 @@ export const Login = () => {
           className={classes.loginButton}
           variant='contained'
           color='primary'
+          onClick={handleAuth}
         >
           Login
         </Button>
