@@ -3,6 +3,11 @@ import cookies from 'js-cookie'
 const COOKIE = 'ghtoken'
 
 export class Auth {
+  static authed() {
+    const token = this.getToken()
+    return token && token !== ''
+  }
+
   static clearToken() {
     return cookies.remove(COOKIE)
   }
