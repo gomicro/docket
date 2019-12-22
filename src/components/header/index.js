@@ -1,4 +1,7 @@
 import React from 'react'
+
+import { Auth } from '../../client'
+
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
@@ -12,10 +15,8 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {},
-  fingerprint: {
+  title: {
     flexGrow: 1,
-    marginLeft: theme.spacing(1),
   },
   loginButton: {
     color: 'inherit',
@@ -25,6 +26,16 @@ const useStyles = makeStyles(theme => ({
 
 export const Header = () => {
   const classes = useStyles()
+
+  const ActionButton = () => {
+    const action = Auth.authed() ? 'logout' : 'login'
+
+    return (
+      <Link to={`/${action}`} className={classes.loginButton}>
+        <Button color='inherit'>{action}</Button>
+      </Link>
+    )
+  }
 
   return (
     <AppBar position='static'>
@@ -40,12 +51,7 @@ export const Header = () => {
         <Typography variant='h6' className={classes.title}>
           Docket
         </Typography>
-        <Typography component='span' className={classes.fingerprint}>
-          ({GIT_HASH})
-        </Typography>
-        <Link to={'/login'} className={classes.loginButton}>
-          <Button color='inherit'>Login</Button>
-        </Link>
+        <ActionButton />
       </Toolbar>
     </AppBar>
   )
