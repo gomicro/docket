@@ -13,6 +13,8 @@ export function Do(method, endpoint, params, headers = {}, body) {
 
   if (params instanceof URLSearchParams) {
     uri.search = params.toString()
+  } else if (typeof params === 'string') {
+    uri.search = params
   } else {
     const newParams = new URLSearchParams(params)
     uri.search = newParams.toString()

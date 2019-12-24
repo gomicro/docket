@@ -24,7 +24,8 @@ export class Auth {
     const token = this.getToken()
 
     if (token !== undefined && token !== '') {
-      headers.Authorization = `token ${token}`
+      headers.Authorization = `Bearer ${token}`
+      headers.Accept= 'application/vnd.github.black-cat-preview+json'
     }
 
     return headers
