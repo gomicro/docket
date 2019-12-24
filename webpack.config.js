@@ -7,7 +7,7 @@ const PATHS = {
   dist: path.join(__dirname, 'dist'),
 }
 
-const GIT_HASH = process.env.GIT_HASH
+const GH_URL = process.env.GH_URL
 
 module.exports = {
   entry: {
@@ -20,7 +20,7 @@ module.exports = {
       title: 'Docket',
     }),
     new webpack.DefinePlugin({
-      GIT_HASH: JSON.stringify(GIT_HASH),
+      GH_URL: JSON.stringify(GH_URL),
     }),
   ],
 

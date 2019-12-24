@@ -1,19 +1,18 @@
 import React from 'react'
+import styled, { createGlobalStyle } from 'styled-components'
+
+import { ErrorBoundary } from './error_boundary'
+import { Pages } from './pages'
 
 export const App = () => (
-  <div className='App'>
-    <header className='App-header'>
-      <p>
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-        className='App-link'
-        href='https://reactjs.org'
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        Learn React
-      </a>
-    </header>
-  </div>
+  <ErrorBoundary>
+    <GlobalStyle />
+    <Pages />
+  </ErrorBoundary>
 )
+
+const GlobalStyle = createGlobalStyle`
+  html, body, #root {
+    margin: 0;
+  }
+`

@@ -1,0 +1,9 @@
+# Always color, even if piping to a another program
+--color
+
+--ignore-dir=.bundle_analysis/
+--ignore-dir=.git/
+--ignore-dir=.idea/
+--ignore-dir=coverage/
+--ignore-dir=dist/
+--ignore-dir=node_modules/
