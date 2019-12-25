@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import moment from 'moment'
 
-import { Orgs, PullRequests } from '../../../clients/github'
+import { Orgs, PullRequests } from '../../../../clients/github'
 import { cardStyles } from './card_styles'
 
 import {
@@ -18,7 +18,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@material-ui/core'
-import { Refresh, GitHub, MergeType } from '@material-ui/icons'
+import { Refresh, GitHub, MergeType, MoreVert } from '@material-ui/icons'
 
 export const PRCard = ({ autoRefresh }) => {
   const [orgNames, setOrgNames] = useState([])
@@ -74,14 +74,19 @@ export const PRCard = ({ autoRefresh }) => {
         subheader={`Last Updated: ${lastUpdated}`}
         subheaderTypographyProps={{ variant: 'body2' }}
         action={
-          <IconButton
-            aria-label='refresh'
-            onClick={() => {
-              updatePRs({ orgNames })
-            }}
-          >
-            <Refresh />
-          </IconButton>
+          <>
+            <IconButton
+              aria-label='refresh'
+              onClick={() => {
+                updatePRs({ orgNames })
+              }}
+            >
+              <Refresh />
+            </IconButton>
+            <IconButton aria-label='settings'>
+              <MoreVert />
+            </IconButton>
+          </>
         }
       />
       <CardContent className={classes.cardContent}>

@@ -2,10 +2,10 @@ import React from 'react'
 
 import { Consumer } from '../../context'
 
-import { PRCard } from './components/pr_card'
+import { PRCard } from './components/cards'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid } from '@material-ui/core'
+import { Grid, Container } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   gridContainer: {
@@ -18,14 +18,16 @@ export const Home = () => {
   const classes = useStyles()
 
   return (
-    <Grid className={classes.gridContainer} container spacing={3}>
-      <Grid item md={12} xs={12}>
-        <Consumer>
-          {({ autoRefresh }) => {
-            return <PRCard autoRefresh={autoRefresh} />
-          }}
-        </Consumer>
+    <Container>
+      <Grid className={classes.gridContainer} container spacing={3}>
+        <Grid item xs={12}>
+          <Consumer>
+            {({ autoRefresh }) => {
+              return <PRCard autoRefresh={autoRefresh} />
+            }}
+          </Consumer>
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   )
 }
