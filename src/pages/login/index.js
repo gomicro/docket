@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { Auth } from '../../client'
+import { Auth } from '../../clients/github'
 
 import { makeStyles } from '@material-ui/core/styles'
 import {

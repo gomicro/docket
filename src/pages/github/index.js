@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { Auth, Oauth } from '../../client'
+import { Oauth } from '../../clients/github'
 
 export const Github = () => {
   const { search } = useLocation()

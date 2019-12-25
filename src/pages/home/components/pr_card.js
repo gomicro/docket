@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import moment from 'moment'
 
-import { Orgs, PullRequests } from '../../../client'
+import { Orgs, PullRequests } from '../../../clients/github'
 import { cardStyles } from './card_styles'
 
 import {
