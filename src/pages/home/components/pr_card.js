@@ -103,7 +103,12 @@ export const PRCard = ({ autoRefresh }) => {
                 secondary={`${pr.org}/${pr.repo}`}
               />
               <ListItemSecondaryAction>
-                <Chip label={moment(`${pr.createdAt}`).fromNow(true)} />
+                <Chip
+                  label={moment(`${pr.createdAt}`)
+                    .fromNow(true)
+                    .split(' ')
+                    .map((p, i) => (i !== 0 ? p[0] : p))}
+                />
               </ListItemSecondaryAction>
             </ListItem>
           ))}
