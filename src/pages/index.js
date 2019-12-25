@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-import { Auth } from '../client'
+import { Auth } from '../clients/github'
 
 import { Header } from '../components/header'
 

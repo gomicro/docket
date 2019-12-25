@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Auth } from '../../client'
+import { Auth } from '../../clients/github'
 import { Consumer } from '../../context'
 
 import { makeStyles } from '@material-ui/core/styles'
