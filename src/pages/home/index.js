@@ -7,20 +7,20 @@ import { Consumer } from '../../context'
 
 import { makeStyles } from '@material-ui/core/styles'
 import {
+  Badge,
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   Chip,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
   ListItemSecondaryAction,
+  ListItemText,
 } from '@material-ui/core'
 
-import RefreshIcon from '@material-ui/icons/Refresh'
-import GitHubIcon from '@material-ui/icons/GitHub'
+import { Refresh, GitHub, MergeType } from '@material-ui/icons'
 
 const useStyles = makeStyles(theme => ({
   prCard: {
@@ -90,8 +90,13 @@ const PRCard = ({ autoRefresh }) => {
   return (
     <Card className={classes.prCard}>
       <CardHeader
+        avatar={
+          <Badge color='primary' max={999} badgeContent={prs.length}>
+            <GitHub />
+          </Badge>
+        }
         className={classes.prCardTitle}
-        title={`Pull Requests (${prs.length})`}
+        title={'Pull Requests'}
         titleTypographyProps={{ variant: 'body1' }}
         subheader={`Last Updated: ${lastUpdated}`}
         subheaderTypographyProps={{ variant: 'body2' }}
@@ -102,7 +107,7 @@ const PRCard = ({ autoRefresh }) => {
               updatePRs({ orgNames })
             }}
           >
-            <RefreshIcon />
+            <Refresh />
           </IconButton>
         }
       />
@@ -118,7 +123,7 @@ const PRCard = ({ autoRefresh }) => {
               target='_blank'
             >
               <ListItemIcon>
-                <GitHubIcon />
+                <MergeType />
               </ListItemIcon>
               <ListItemText
                 primary={pr.title}
