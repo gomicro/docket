@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 
 import { Orgs, PullRequests } from '../../client'
+import { Consumer } from '../../context'
 
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -46,10 +47,11 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const Home = () => {
+const PRCard = ({ autoRefresh }) => {
   const [orgNames, setOrgNames] = useState([])
   const [prs, setPRs] = useState([])
   const [lastUpdated, setLastUpdated] = useState('null')
+  const [loop, setLoop] = useState()
 
   const classes = useStyles()
 
@@ -62,6 +64,21 @@ export const Home = () => {
       })
       .catch(error => console.log(error))
   }, [])
+
+  useEffect(() => {
+    clearInterval(loop)
+    if (!isNaN(autoRefresh)) {
+      Orgs.getOrgs()
+        .then(orgs => {
+          const names = orgs.map(o => o.login)
+          setOrgNames(names)
+          setLoop(
+            setInterval(() => updatePRs({ orgNames: names }), autoRefresh),
+          )
+        })
+        .catch(error => console.log(error))
+    }
+  }, [autoRefresh])
 
   const updatePRs = ({ orgNames }) => {
     PullRequests.getPullRequests({ orgNames }).then(newPRs => {
@@ -115,5 +132,15 @@ export const Home = () => {
         </List>
       </CardContent>
     </Card>
+  )
+}
+
+export const Home = () => {
+  return (
+    <Consumer>
+      {({ autoRefresh }) => {
+        return <PRCard autoRefresh={autoRefresh} />
+      }}
+    </Consumer>
   )
 }

@@ -1,13 +1,16 @@
 import React from 'react'
-import styled, { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 
 import { ErrorBoundary } from './error_boundary'
+import { Provider } from './context'
 import { Pages } from './pages'
 
 export const App = () => (
   <ErrorBoundary>
     <GlobalStyle />
-    <Pages />
+    <Provider>
+      <Pages />
+    </Provider>
   </ErrorBoundary>
 )
 
