@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 
-import { Auth } from '../../clients/github'
 import { Consumer } from '../../context'
 
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
   AppBar,
-  Button,
   List,
   ListItem,
   ListItemText,
@@ -24,10 +21,6 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
-  loginButton: {
-    color: 'inherit',
-    textDecoration: 'none',
-  },
   autoRefreshButton: {
     marginRight: theme.spacing(1),
   },
@@ -39,16 +32,6 @@ export const Header = () => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(2)
-
-  const ActionButton = () => {
-    const action = Auth.authed() ? 'logout' : 'login'
-
-    return (
-      <Link to={`/${action}`} className={classes.loginButton}>
-        <Button color='inherit'>{action}</Button>
-      </Link>
-    )
-  }
 
   const handleClickListItem = event => {
     setAnchorEl(event.currentTarget)
@@ -70,12 +53,12 @@ export const Header = () => {
         <Typography variant='h6' className={classes.title}>
           Docket
         </Typography>
-        <List component='nav' aria-label='Device settings'>
+        <List component='nav' aria-label='Auto Refresh'>
           <ListItem
             button
             aria-haspopup='true'
-            aria-controls='lock-menu'
-            aria-label='when device is locked'
+            aria-controls='auto-refresh-menu'
+            aria-label='auto refresh frequency'
             onClick={handleClickListItem}
           >
             <Autorenew className={classes.autoRefreshButton} />
@@ -90,7 +73,7 @@ export const Header = () => {
         <Consumer>
           {({ setAutoRefresh }) => (
             <Menu
-              id='lock-menu'
+              id='auto-refresh-menu'
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
@@ -112,17 +95,7 @@ export const Header = () => {
             </Menu>
           )}
         </Consumer>
-        <ActionButton />
       </Toolbar>
     </AppBar>
   )
 }
-
-/*
-<ArrowDropDown />
-<Button>
-  {selectedIndex !== 0 && <Autorenew />}
-  {`${autoRefreshOptions[selectedIndex]} ${selectedIndex !== 0 &&
-    'minutes'}`}
-</Button>
-*/

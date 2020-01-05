@@ -1,50 +1,46 @@
 import React, { useEffect, useState } from 'react'
-
 import moment from 'moment'
 
-import { Orgs, PullRequests } from '../../../../clients/github'
+import { Auth, Orgs, PullRequests } from '../../../../clients/github'
 import { cardStyles } from './card_styles'
+import { GithubLogin } from '../github_login'
+import { PRList } from '../pr_list'
 
 import {
   Badge,
   Card,
   CardContent,
   CardHeader,
-  Chip,
+  Divider,
   IconButton,
-  List,
-  ListItem,
   ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
+  Menu,
+  MenuItem,
 } from '@material-ui/core'
-import { Refresh, GitHub, MergeType, MoreVert } from '@material-ui/icons'
+import { ExitToApp, GitHub, MoreVert, Refresh } from '@material-ui/icons'
 
 export const PRCard = ({ autoRefresh }) => {
-  const [orgNames, setOrgNames] = useState([])
+  const [authed, setAuthed] = useState(false)
   const [prs, setPRs] = useState([])
-  const [lastUpdated, setLastUpdated] = useState('null')
+  const [lastUpdated, setLastUpdated] = useState(null)
   const [loop, setLoop] = useState()
 
   const classes = cardStyles()
 
   useEffect(() => {
-    Orgs.getOrgs()
-      .then(orgs => {
-        const names = orgs.map(o => o.login)
-        setOrgNames(names)
-        updatePRs({ orgNames: names })
-      })
-      .catch(error => console.log(error))
+    setAuthed(Auth.authed())
   }, [])
 
   useEffect(() => {
+    authed && updateContents()
+  }, [authed])
+
+  useEffect(() => {
     clearInterval(loop)
-    if (!isNaN(autoRefresh)) {
+    if (!isNaN(autoRefresh) && authed) {
       Orgs.getOrgs()
         .then(orgs => {
           const names = orgs.map(o => o.login)
-          setOrgNames(names)
           setLoop(
             setInterval(() => updatePRs({ orgNames: names }), autoRefresh),
           )
@@ -53,11 +49,71 @@ export const PRCard = ({ autoRefresh }) => {
     }
   }, [autoRefresh])
 
+  const updateContents = () => {
+    Orgs.getOrgs()
+      .then(orgs => {
+        const names = orgs.map(o => o.login)
+        updatePRs({ orgNames: names })
+      })
+      .catch(error => console.log(error))
+  }
+
   const updatePRs = ({ orgNames }) => {
     PullRequests.getPullRequests({ orgNames }).then(newPRs => {
       setPRs(newPRs)
       setLastUpdated(moment().format('LTS'))
     })
+  }
+
+  const CardActions = () => {
+    const [anchorEl, setAnchorEl] = useState(null)
+
+    const handleOpen = event => {
+      setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+      setAnchorEl(null)
+    }
+
+    const handleLogout = () => {
+      if (!Auth.clearToken()) {
+        setPRs([])
+        setAuthed(false)
+      }
+    }
+
+    return authed ? (
+      <>
+        <IconButton aria-label='refresh' onClick={updateContents}>
+          <Refresh />
+        </IconButton>
+        <IconButton aria-label='settings' onClick={handleOpen}>
+          <MoreVert />
+        </IconButton>
+        <Menu
+          id='github-menu'
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={updateContents}>
+            <ListItemIcon>
+              <Refresh />
+            </ListItemIcon>
+            Refresh
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={handleLogout}>
+            <ListItemIcon>
+              <ExitToApp />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
+      </>
+    ) : null
   }
 
   return (
@@ -71,53 +127,12 @@ export const PRCard = ({ autoRefresh }) => {
         className={classes.cardTitle}
         title={'Pull Requests'}
         titleTypographyProps={{ variant: 'body1' }}
-        subheader={`Last Updated: ${lastUpdated}`}
+        subheader={authed && lastUpdated ? `Last Updated: ${lastUpdated}` : ''}
         subheaderTypographyProps={{ variant: 'body2' }}
-        action={
-          <>
-            <IconButton
-              aria-label='refresh'
-              onClick={() => {
-                updatePRs({ orgNames })
-              }}
-            >
-              <Refresh />
-            </IconButton>
-            <IconButton aria-label='settings'>
-              <MoreVert />
-            </IconButton>
-          </>
-        }
+        action={<CardActions />}
       />
       <CardContent className={classes.cardContent}>
-        <List dense disablePadding>
-          {prs.map(pr => (
-            <ListItem
-              dense
-              key={`${pr.org}:${pr.repo}:${pr.id}`}
-              button
-              component='a'
-              href={pr.link}
-              target='_blank'
-            >
-              <ListItemIcon>
-                <MergeType />
-              </ListItemIcon>
-              <ListItemText
-                primary={pr.title}
-                secondary={`${pr.org}/${pr.repo}`}
-              />
-              <ListItemSecondaryAction>
-                <Chip
-                  label={moment(`${pr.createdAt}`)
-                    .fromNow(true)
-                    .split(' ')
-                    .map((p, i) => (i !== 0 ? p[0] : p))}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
+        {authed ? <PRList prs={prs} /> : <GithubLogin setAuthed={setAuthed} />}
       </CardContent>
     </Card>
   )

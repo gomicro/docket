@@ -20,7 +20,7 @@ export const Home = () => {
   return (
     <Container>
       <Grid className={classes.gridContainer} container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item md={12}>
           <Consumer>
             {({ autoRefresh }) => {
               return <PRCard autoRefresh={autoRefresh} />
