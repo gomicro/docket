@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Auth } from '../../../clients/github'
 
@@ -30,11 +30,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const GithubLogin = ({ setAuthed }) => {
+  const [invalid, setInvalid] = useState({})
   const classes = useStyles()
 
   const handleAuth = () => {
     const token = document.getElementById('github-auth-token').value
-    setAuthed(Auth.setToken(token))
+
+    if (token.length < 40) {
+      setInvalid({
+        state: true,
+        message: 'Token too short',
+      })
+    } else {
+      setAuthed(Auth.setToken(token))
+    }
   }
 
   return (
@@ -43,6 +52,8 @@ export const GithubLogin = ({ setAuthed }) => {
         <form className={classes.authForm} noValidate autoComplete='off'>
           <TextField
             required
+            error={invalid.state}
+            helperText={invalid.message}
             id='github-auth-token'
             label='Github Auth Token'
           />
