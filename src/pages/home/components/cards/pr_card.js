@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { Context } from '../../../../context'
 import moment from 'moment'
 
 import { Auth, Orgs, PullRequests } from '../../../../clients/github'
@@ -19,11 +20,13 @@ import {
 } from '@material-ui/core'
 import { ExitToApp, GitHub, MoreVert, Refresh } from '@material-ui/icons'
 
-export const PRCard = ({ autoRefresh }) => {
+export const PRCard = () => {
   const [authed, setAuthed] = useState(false)
   const [prs, setPRs] = useState([])
   const [lastUpdated, setLastUpdated] = useState(null)
   const [loop, setLoop] = useState()
+
+  const { addAlert, autoRefresh } = useContext(Context)
 
   const classes = cardStyles()
 
@@ -45,7 +48,7 @@ export const PRCard = ({ autoRefresh }) => {
             setInterval(() => updatePRs({ orgNames: names }), autoRefresh),
           )
         })
-        .catch(error => console.log(error))
+        .catch(error => addAlert(error.toString()))
     }
   }, [autoRefresh])
 
@@ -55,7 +58,7 @@ export const PRCard = ({ autoRefresh }) => {
         const names = orgs.map(o => o.login)
         updatePRs({ orgNames: names })
       })
-      .catch(error => console.log(error))
+      .catch(error => addAlert(error.toString()))
   }
 
   const updatePRs = ({ orgNames }) => {

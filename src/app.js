@@ -3,13 +3,17 @@ import { createGlobalStyle } from 'styled-components'
 
 import { ErrorBoundary } from './error_boundary'
 import { Provider } from './context'
+import { Alerts } from './components/alerts'
 import { Pages } from './pages'
 
 export const App = () => (
   <ErrorBoundary>
     <GlobalStyle />
     <Provider>
-      <Pages />
+      <>
+        <Alerts />
+        <Pages />
+      </>
     </Provider>
   </ErrorBoundary>
 )

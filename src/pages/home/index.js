@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Consumer } from '../../context'
-
 import { PRCard } from './components/cards'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -21,11 +19,7 @@ export const Home = () => {
     <Container>
       <Grid className={classes.gridContainer} container spacing={3}>
         <Grid item md={12}>
-          <Consumer>
-            {({ autoRefresh }) => {
-              return <PRCard autoRefresh={autoRefresh} />
-            }}
-          </Consumer>
+          <PRCard />
         </Grid>
       </Grid>
     </Container>
