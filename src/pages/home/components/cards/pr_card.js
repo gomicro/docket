@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Context } from '../../../../context'
+import { Context } from 'context'
 import moment from 'moment'
 
 import { Auth, Orgs, PullRequests } from '../../../../clients/github'

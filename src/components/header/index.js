@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 
-import { Context } from '../../context'
+import { Context } from 'context'
 
 import { makeStyles } from '@material-ui/core/styles'
 

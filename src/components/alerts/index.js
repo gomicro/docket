@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Context } from '../../context'
+import { Context } from 'context'
 
 import { IconButton, Snackbar } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
