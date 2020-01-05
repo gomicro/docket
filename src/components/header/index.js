@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
-import { Consumer } from '../../context'
+import { Context } from 'context'
 
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -33,11 +33,13 @@ export const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(2)
 
+  const { setAutoRefresh } = useContext(Context)
+
   const handleClickListItem = event => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleMenuItemClick = (event, index, setAutoRefresh) => {
+  const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index)
     setAutoRefresh(autoRefreshOptions[index] * 60 * 1000)
     setAnchorEl(null)
@@ -70,31 +72,25 @@ export const Header = () => {
             />
           </ListItem>
         </List>
-        <Consumer>
-          {({ setAutoRefresh }) => (
-            <Menu
-              id='auto-refresh-menu'
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
+        <Menu
+          id='auto-refresh-menu'
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {autoRefreshOptions.map((option, index) => (
+            <MenuItem
+              key={option}
+              disabled={index === 0}
+              selected={index === selectedIndex}
+              onClick={event => handleMenuItemClick(event, index)}
             >
-              {autoRefreshOptions.map((option, index) => (
-                <MenuItem
-                  key={option}
-                  disabled={index === 0}
-                  selected={index === selectedIndex}
-                  onClick={event =>
-                    handleMenuItemClick(event, index, setAutoRefresh)
-                  }
-                >
-                  {option}
-                  {index > 1 && ' Minutes'}
-                </MenuItem>
-              ))}
-            </Menu>
-          )}
-        </Consumer>
+              {option}
+              {index > 1 && ' Minutes'}
+            </MenuItem>
+          ))}
+        </Menu>
       </Toolbar>
     </AppBar>
   )
