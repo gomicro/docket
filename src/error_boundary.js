@@ -1,10 +1,5 @@
 import React from 'react'
-
-const InternalServer = () => (
-  <div>
-    <h1>Error</h1>
-  </div>
-)
+import { Redirect } from 'react-router-dom'
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -12,13 +7,13 @@ export class ErrorBoundary extends React.Component {
     this.state = { hasError: false }
   }
 
-  componentDidCatch(error) {
+  componentDidCatch() {
     this.setState({ hasError: true })
   }
 
   render() {
     return this.state.hasError === true ? (
-      <InternalServer />
+      <Redirect to='/500' />
     ) : (
       this.props.children
     )
