@@ -1,9 +1,7 @@
 import React, { useContext, useState } from 'react'
-
 import { Context } from 'context'
 
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   AppBar,
   List,
@@ -14,7 +12,6 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core'
-
 import { Autorenew } from '@material-ui/icons'
 
 const useStyles = makeStyles(theme => ({
