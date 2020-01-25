@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import { MergeType } from '@material-ui/icons'
 
-export const PRList = ({ prs }) => (
+export const PRList = ({ prs = [] }) => (
   <List dense disablePadding>
     {prs.map(pr => (
       <ListItem
