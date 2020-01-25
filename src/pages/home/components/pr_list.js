@@ -11,7 +11,29 @@ import {
 } from '@material-ui/core'
 import { MergeType } from '@material-ui/icons'
 
-export const PRList = ({ prs }) => (
+const chipVal = date => {
+  const from = moment(`${date}`)
+  const now = moment(moment.now())
+  const diff = now.diff(from, 'seconds')
+
+  if (now.diff(from, 'seconds') < 60) {
+    return `${diff}s`
+  } else if (now.diff(from, 'seconds') < 3600) {
+    return `${now.diff(from, 'minutes')}m`
+  } else if (now.diff(from, 'seconds') < 86400) {
+    return `${now.diff(from, 'hours')}h`
+  } else if (now.diff(from, 'seconds') < 604800) {
+    return `${now.diff(from, 'day')}d`
+  } else if (now.diff(from, 'seconds') < 2419200) {
+    return `${now.diff(from, 'week')}w`
+  } else if (now.diff(from, 'seconds') < 13222801) {
+    return `${now.diff(from, 'month')}M`
+  } else {
+    return `${now.diff(from, 'year')}y`
+  }
+}
+
+export const PRList = ({ prs = [] }) => (
   <List dense disablePadding>
     {prs.map(pr => (
       <ListItem
@@ -27,12 +49,7 @@ export const PRList = ({ prs }) => (
         </ListItemIcon>
         <ListItemText primary={pr.title} secondary={`${pr.org}/${pr.repo}`} />
         <ListItemSecondaryAction>
-          <Chip
-            label={moment(`${pr.createdAt}`)
-              .fromNow(true)
-              .split(' ')
-              .map((p, i) => (i !== 0 ? p[0] : p === 'a' ? 1 : p))}
-          />
+          <Chip label={chipVal(pr.createdAt)} />
         </ListItemSecondaryAction>
       </ListItem>
     ))}
