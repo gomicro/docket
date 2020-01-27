@@ -8,6 +8,7 @@ ANIMATIONS ?= true
 GIT_SHORT_COMMIT_HASH := $(shell git rev-parse --short HEAD)
 
 GH_URL := 'https://api.github.com'
+TR_URL := 'https://api.travis-ci.com'
 
 NO_COLOR := \033[0m
 INFO_COLOR := \033[0;36m
@@ -18,6 +19,7 @@ all: run
 .PHONY: build
 build: clean ## Build the project
 	GH_URL=$(GH_URL) \
+	TR_URL=$(TR_URL) \
 	npx webpack -p
 
 .PHONY: clean
@@ -31,7 +33,8 @@ clean: ## Cleanup all running and generated items
 .PHONY: dev
 dev: ## Run the dev test server
 	GH_URL=$(GH_URL) \
-	npx webpack-dev-server --port 8001 --hot --progress
+	TR_URL=$(TR_URL) \
+	npx webpack-dev-server --port 8080 --hot --progress
 
 .PHONY: help
 help:  ## Show This Help
