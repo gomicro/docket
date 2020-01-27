@@ -1,5 +1,6 @@
 import { Get } from './requests'
 import { Auth } from './auth'
+import Mustache from 'mustache'
 
 export class Repos {
   static getRepos() {
@@ -13,6 +14,21 @@ export class Repos {
         throw error
       })
   }
+
+  static getBranches({ slug }) {
+    const params = {}
+
+    const endpoint = Mustache.render(getReposBranchesEndpoint, {
+      slug: slug,
+    })
+
+    return Get(endpoint, params, Auth.appendHeaders())
+      .then(({ data }) => data)
+      .catch(error => {
+        throw error
+      })
+  }
 }
 
 const getReposEndpoint = '/repos'
+const getReposBranchesEndpoint = '/repo/{{slug}}/branches'
