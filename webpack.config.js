@@ -8,6 +8,7 @@ const PATHS = {
 }
 
 const GH_URL = process.env.GH_URL
+const TR_URL = process.env.TR_URL
 
 module.exports = {
   entry: {
@@ -21,6 +22,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       GH_URL: JSON.stringify(GH_URL),
+      TR_URL: JSON.stringify(TR_URL),
     }),
   ],
 
