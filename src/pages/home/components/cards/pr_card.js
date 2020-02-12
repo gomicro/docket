@@ -39,6 +39,7 @@ export const PRCard = () => {
   }, [authed])
 
   useEffect(() => {
+    /*
     clearInterval(loop)
     if (!isNaN(autoRefresh) && authed) {
       Orgs.getOrgs()
@@ -50,6 +51,7 @@ export const PRCard = () => {
         })
         .catch(error => addAlert(error.toString()))
     }
+    */
   }, [autoRefresh])
 
   const updateContents = () => {
