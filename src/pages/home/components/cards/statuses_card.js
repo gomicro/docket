@@ -1,19 +1,51 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { Context } from 'context'
+import moment from 'moment'
 
+import { Auth, Repos } from '../../../../clients/travis'
 import { cardStyles } from './card_styles'
 import { TravisLogin } from '../travis_login'
+import { StatusesList } from '../statuses_list'
 
-import { Refresh, MoreVert } from '@material-ui/icons'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Divider,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from '@material-ui/core'
+import { ExitToApp, Refresh, MoreVert } from '@material-ui/icons'
 import { TravisIcon } from '../../../../assets/icons/travis'
-import { Card, CardContent, CardHeader, IconButton } from '@material-ui/core'
 
 export const StatusesCard = () => {
   const [authed, setAuthed] = useState(false)
+  const [statuses, setStatuses] = useState([])
   const [lastUpdated, setLastUpdated] = useState('null')
+
+  const { addAlert } = useContext(Context)
 
   const classes = cardStyles()
 
-  const updateContents = () => {}
+  useEffect(() => {
+    setAuthed(Auth.authed())
+  }, [])
+
+  useEffect(() => {
+    authed && updateContents()
+  }, [authed])
+
+  const updateContents = () => {
+    Repos.getRepos()
+      .then(repos => {
+        repos.map(repo => Repos.getBranches({ slug: repo.slug })),
+          // setStatuses(repos)
+          setLastUpdated(moment().format('LTS'))
+      })
+      .catch(error => addAlert(error.toString()))
+  }
 
   const CardActions = () => {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -26,7 +58,12 @@ export const StatusesCard = () => {
       setAnchorEl(null)
     }
 
-    const handleLogout = () => {}
+    const handleLogout = () => {
+      if (!Auth.clearToken()) {
+        setStatuses([])
+        setAuthed(false)
+      }
+    }
 
     return authed ? (
       <>
@@ -73,7 +110,11 @@ export const StatusesCard = () => {
         action={<CardActions />}
       />
       <CardContent className={classes.cardContent}>
-        {authed ? <div>statuses</div> : <TravisLogin setAuthed={setAuthed} />}
+        {authed ? (
+          <StatusesList statuses={[]} />
+        ) : (
+          <TravisLogin setAuthed={setAuthed} />
+        )}
       </CardContent>
     </Card>
   )
