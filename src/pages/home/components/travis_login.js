@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Auth } from '../../../clients/travis'
+
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Card,
@@ -32,6 +34,8 @@ export const TravisLogin = ({ setAuthed }) => {
 
   const handleAuth = () => {
     const token = document.getElementById('travis-auth-token').value
+
+    setAuthed(Auth.setToken(token))
   }
 
   return (
