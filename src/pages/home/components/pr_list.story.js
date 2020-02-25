@@ -5,6 +5,8 @@ import { PRList } from './pr_list'
 
 storiesOf('Pages/Home/PR Lists', module)
   .add('empty', () => <PRList />)
+
+storiesOf('Pages/Home/PR Lists (ignore test)', module)
   .add('with PRs', () => <PRList prs={validPRs} />)
 
 const validPRs = [
