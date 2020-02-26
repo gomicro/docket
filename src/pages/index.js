@@ -5,6 +5,7 @@ import { Header } from '../components/header'
 
 import { Home } from './home'
 import { Logout } from './logout'
+import { Login } from './login'
 import { NotFound } from './not_found'
 
 export const Pages = () => (
@@ -14,6 +15,7 @@ export const Pages = () => (
       <Route exact path='/' component={Home} />
 
       <Route path='/logout' component={Logout} />
+      <Route path='/login' component={Login} />
 
       <Route path='/404' component={NotFound} />
       <Route component={() => <Redirect to='/404' />} />
