@@ -4,8 +4,6 @@ import moment from 'moment'
 import { Context } from 'context'
 import { PullRequests } from '../../../clients/github'
 
-import { styled } from '@material-ui/core/styles'
-import { MergeType, LibraryBooks } from '@material-ui/icons'
 import {
   Avatar,
   Badge,
@@ -15,6 +13,9 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@material-ui/core'
+import { styled } from '@material-ui/core/styles'
+import { MergeType, LibraryBooks } from '@material-ui/icons'
+import { green, orange, grey } from '@material-ui/core/colors'
 
 const MergeFeatureFlag = false
 
@@ -84,12 +85,15 @@ export const PRListItem = ({ pr }) => {
   )
 }
 
-const StyledAvatar = styled(Avatar)`
-  ${({ status }) => {
-    if (status === 'approved') {
-      return 'background-color: green;'
-    } else if (status === 'needsChanges') {
-      return 'background-color: red;'
-    }
-  }}
-`
+const approved = green[500]
+const needsChanges = orange[200]
+const unapproved = grey[400]
+
+const StyledAvatar = styled(({ status, ...rest }) => <Avatar {...rest} />)({
+  backgroundColor: props =>
+    props.status === 'approved'
+      ? approved
+      : props.status === 'needsChanges'
+      ? needsChanges
+      : unapproved,
+})
