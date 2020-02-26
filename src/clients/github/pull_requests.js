@@ -28,11 +28,13 @@ export class PullRequests {
                 title,
                 labels,
                 id,
+                number,
                 created_at: createdAt,
               }) => ({
                 repo: repoURL.split('/').pop(),
                 link,
                 org,
+                number,
                 title,
                 labels,
                 id,
@@ -50,6 +52,16 @@ export class PullRequests {
         })
         return newPRs
       })
+      .catch(error => {
+        throw error
+      })
+  }
+
+  static getReviewStatus({ repo, org, number }) {
+    const endpoint = `/repos/${org}/${repo}/pulls/${number}/reviews`
+
+    return Get(endpoint, undefined, Auth.appendHeaders())
+      .then(({ data }) => data)
       .catch(error => {
         throw error
       })

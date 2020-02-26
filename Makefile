@@ -51,7 +51,7 @@ story: ## Run storybook
 	npx start-storybook -p 9001 -c .storybook
 
 .PHONY: test
-test: snapshots ## Run all tests available
+test: ## Run all tests available
 
 .PHONY: snapshots
 snapshots:  ## Run snapshot tests

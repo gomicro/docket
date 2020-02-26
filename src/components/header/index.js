@@ -14,6 +14,8 @@ import {
 } from '@material-ui/core'
 import { Autorenew } from '@material-ui/icons'
 
+const AutoRefreshFeatureFlag = false
+
 const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
@@ -52,42 +54,46 @@ export const Header = () => {
         <Typography variant='h6' className={classes.title}>
           Docket
         </Typography>
-        <List component='nav' aria-label='Auto Refresh'>
-          <ListItem
-            button
-            aria-haspopup='true'
-            aria-controls='auto-refresh-menu'
-            aria-label='auto refresh frequency'
-            onClick={handleClickListItem}
-          >
-            <Autorenew className={classes.autoRefreshButton} />
-            <ListItemText
-              primaryTypographyProps={{ variant: 'button' }}
-              primary={`${autoRefreshOptions[selectedIndex]} ${
-                selectedIndex > 1 ? 'Minutes' : ''
-              }`}
-            />
-          </ListItem>
-        </List>
-        <Menu
-          id='auto-refresh-menu'
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {autoRefreshOptions.map((option, index) => (
-            <MenuItem
-              key={option}
-              disabled={index === 0}
-              selected={index === selectedIndex}
-              onClick={event => handleMenuItemClick(event, index)}
+        {AutoRefreshFeatureFlag && (
+          <>
+            <List component='nav' aria-label='Auto Refresh'>
+              <ListItem
+                button
+                aria-haspopup='true'
+                aria-controls='auto-refresh-menu'
+                aria-label='auto refresh frequency'
+                onClick={handleClickListItem}
+              >
+                <Autorenew className={classes.autoRefreshButton} />
+                <ListItemText
+                  primaryTypographyProps={{ variant: 'button' }}
+                  primary={`${autoRefreshOptions[selectedIndex]} ${
+                    selectedIndex > 1 ? 'Minutes' : ''
+                  }`}
+                />
+              </ListItem>
+            </List>
+            <Menu
+              id='auto-refresh-menu'
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
-              {option}
-              {index > 1 && ' Minutes'}
-            </MenuItem>
-          ))}
-        </Menu>
+              {autoRefreshOptions.map((option, index) => (
+                <MenuItem
+                  key={option}
+                  disabled={index === 0}
+                  selected={index === selectedIndex}
+                  onClick={event => handleMenuItemClick(event, index)}
+                >
+                  {option}
+                  {index > 1 && ' Minutes'}
+                </MenuItem>
+              ))}
+            </Menu>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   )
