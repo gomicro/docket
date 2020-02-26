@@ -9,6 +9,8 @@ const PATHS = {
 
 const GH_URL = process.env.GH_URL
 const TR_URL = process.env.TR_URL
+const FB_PROJECT_ID = 'gomicro-50cb1'
+const FB_API_KEY = process.env.FB_API_KEY
 
 module.exports = {
   entry: {
@@ -23,6 +25,8 @@ module.exports = {
     new webpack.DefinePlugin({
       GH_URL: JSON.stringify(GH_URL),
       TR_URL: JSON.stringify(TR_URL),
+      FB_PROJECT_ID: JSON.stringify(FB_PROJECT_ID),
+      FB_API_KEY: JSON.stringify(FB_API_KEY),
     }),
   ],
 
