@@ -1,8 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { Auth } from '../../clients/github'
-
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Card,
@@ -11,6 +9,9 @@ import {
   Button,
   TextField,
 } from '@material-ui/core'
+import { GitHub } from '@material-ui/icons'
+
+import { Auth } from '../../clients/github'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -35,18 +36,12 @@ export const Login = () => {
   const classes = useStyles()
 
   const handleAuth = () => {
-    const token = document.getElementById('auth-token').value
-    Auth.setToken(token)
-
-    history.push('/')
   }
 
   return (
     <Card className={classes.card}>
       <CardContent>
-        <form className={classes.authForm} noValidate autoComplete='off'>
-          <TextField required id='auth-token' label='Auth Token' />
-        </form>
+        <GitHub />
       </CardContent>
       <CardActions>
         <Button
