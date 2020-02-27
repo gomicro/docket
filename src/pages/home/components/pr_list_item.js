@@ -12,12 +12,14 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Tooltip,
 } from '@material-ui/core'
-import { styled } from '@material-ui/core/styles'
-import { MergeType, LibraryBooks } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/core/styles'
+import { Check, LibraryBooks, MergeType, ThumbUp } from '@material-ui/icons'
 import { green, orange, grey } from '@material-ui/core/colors'
 
 const MergeFeatureFlag = false
+const ChecksFeatureFlag = false
 
 const chipVal = date => {
   const from = moment(`${date}`)
@@ -41,8 +43,52 @@ const chipVal = date => {
   }
 }
 
+const useStyles = makeStyles({
+  approved: {
+    fontSize: '1.1em',
+    verticalAlign: 'sub',
+    marginLeft: '16px',
+    color: props =>
+      props.approved === 'approved'
+        ? green[500]
+        : props.approved === 'needsChanges'
+        ? orange[500]
+        : grey[400],
+  },
+  checks: {
+    fontSize: '1.1em',
+    verticalAlign: 'sub',
+    marginLeft: '8px',
+    color: grey[400],
+  },
+  mergable: {
+    backgroundColor: grey[400],
+  },
+})
+
+const Title = ({ title, approved }) => {
+  const classes = useStyles({ approved })
+
+  return (
+    <>
+      {title}
+      <Tooltip title={`Approval: ${approved}`}>
+        <ThumbUp className={classes.approved} />
+      </Tooltip>
+      {ChecksFeatureFlag && (
+        <Tooltip title='Github Checks'>
+          <Check className={classes.checks} />
+        </Tooltip>
+      )}
+    </>
+  )
+}
+
 export const PRListItem = ({ pr }) => {
-  const [status, setStatus] = useState('unapproved')
+  const [approved, setApproved] = useState('unapproved')
+
+  const classes = useStyles()
+
   const { addAlert } = useContext(Context)
 
   useEffect(() => {
@@ -51,9 +97,9 @@ export const PRListItem = ({ pr }) => {
         .then(statuses => statuses.map(status => status.state))
         .then(statuses => {
           if (statuses.includes('CHANGES_REQUESTED')) {
-            setStatus('needsChanges')
+            setApproved('needsChanges')
           } else if (statuses.includes('APPROVED')) {
-            setStatus('approved')
+            setApproved('approved')
           }
         })
         .catch(error => addAlert(error.toString()))
@@ -68,12 +114,15 @@ export const PRListItem = ({ pr }) => {
           overlap='circle'
           badgeContent={chipVal(pr.createdAt)}
         >
-          <StyledAvatar status={status}>
+          <Avatar className={classes.mergable}>
             <LibraryBooks />
-          </StyledAvatar>
+          </Avatar>
         </Badge>
       </ListItemAvatar>
-      <ListItemText primary={pr.title} secondary={`${pr.org}/${pr.repo}`} />
+      <ListItemText
+        primary={<Title title={pr.title} approved={approved} />}
+        secondary={`${pr.org}/${pr.repo}`}
+      />
       {MergeFeatureFlag && (
         <ListItemSecondaryAction>
           <IconButton edge='end' aria-label='delete'>
@@ -84,16 +133,3 @@ export const PRListItem = ({ pr }) => {
     </ListItem>
   )
 }
-
-const approved = green[500]
-const needsChanges = orange[200]
-const unapproved = grey[400]
-
-const StyledAvatar = styled(({ status, ...rest }) => <Avatar {...rest} />)({
-  backgroundColor: props =>
-    props.status === 'approved'
-      ? approved
-      : props.status === 'needsChanges'
-      ? needsChanges
-      : unapproved,
-})
