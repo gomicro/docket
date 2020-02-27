@@ -1,4 +1,4 @@
-import { Get } from './requests'
+import { Get, Put } from './requests'
 import { Auth } from './auth'
 
 export class PullRequests {
@@ -87,6 +87,19 @@ export class PullRequests {
 
     return Get(endpoint, undefined, Auth.appendHeaders(headers))
       .then(({ data }) => data)
+      .catch(error => {
+        throw error
+      })
+  }
+
+  static mergePullRequest({ repo, org, number }) {
+    const endpoint = `/repos/${org}/${repo}/pulls/${number}/merge`
+    const body = {
+      commit_message: `Merging PR #${number}`,
+    }
+
+    return Put(endpoint, undefined, Auth.appendHeaders(), body)
+      .then(({ merged }) => merged)
       .catch(error => {
         throw error
       })
