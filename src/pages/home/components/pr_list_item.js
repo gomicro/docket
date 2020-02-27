@@ -18,8 +18,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Check, LibraryBooks, MergeType, ThumbUp } from '@material-ui/icons'
 import { green, orange, red, grey } from '@material-ui/core/colors'
 
-const MergeFeatureFlag = false
-
 const chipVal = date => {
   const from = moment(`${date}`)
   const now = moment(moment.now())
@@ -139,6 +137,12 @@ export const PRListItem = ({ pr }) => {
     }
   }, [pr])
 
+  const handleMerge = () => {
+    PullRequests.mergePullRequest(pr)
+      .then(merged => addAlert(`Merged PR #${pr.number}`))
+      .catch(error => addAlert(error.toString()))
+  }
+
   return (
     <ListItem dense button component='a' href={pr.link} target='_blank'>
       <ListItemAvatar>
@@ -163,9 +167,9 @@ export const PRListItem = ({ pr }) => {
         }
         secondary={`${pr.org}/${pr.repo}`}
       />
-      {MergeFeatureFlag && (
+      {mergeable && (
         <ListItemSecondaryAction>
-          <IconButton edge='end' aria-label='delete'>
+          <IconButton edge='end' aria-label='delete' onClick={handleMerge}>
             <MergeType />
           </IconButton>
         </ListItemSecondaryAction>
