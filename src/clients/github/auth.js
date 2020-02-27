@@ -25,7 +25,6 @@ export class Auth {
 
     if (token !== undefined && token !== '') {
       headers.Authorization = `Bearer ${token}`
-      headers.Accept= 'application/vnd.github.black-cat-preview+json'
     }
 
     return headers

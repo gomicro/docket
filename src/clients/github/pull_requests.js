@@ -57,10 +57,35 @@ export class PullRequests {
       })
   }
 
+  static getPullRequest({ repo, org, number }) {
+    const endpoint = `/repos/${org}/${repo}/pulls/${number}`
+
+    return Get(endpoint, undefined, Auth.appendHeaders())
+      .then(({ data }) => data)
+      .catch(error => {
+        throw error
+      })
+  }
+
   static getReviewStatus({ repo, org, number }) {
     const endpoint = `/repos/${org}/${repo}/pulls/${number}/reviews`
 
     return Get(endpoint, undefined, Auth.appendHeaders())
+      .then(({ data }) => data)
+      .catch(error => {
+        throw error
+      })
+  }
+
+  static getChecks({ repo, org, ref }) {
+    const endpoint = `/repos/${org}/${repo}/commits/${ref}/check-suites`
+
+    const headers = {
+      Accept: 'application/vnd.github.antiope-preview+json',
+      'Content-Type': 'application/json',
+    }
+
+    return Get(endpoint, undefined, Auth.appendHeaders(headers))
       .then(({ data }) => data)
       .catch(error => {
         throw error
