@@ -72,12 +72,13 @@ const useStyles = makeStyles({
   },
 })
 
-const Title = ({ title, approved, checked }) => {
+const Title = ({ title, number, approved, checked }) => {
   const classes = useStyles({ approved, checked })
+  const display = `#${number} ${title}`
 
   return (
     <>
-      {title}
+      {display}
       <Tooltip title={`Approval: ${approved}`}>
         <ThumbUp className={classes.approved} />
       </Tooltip>
@@ -153,7 +154,12 @@ export const PRListItem = ({ pr }) => {
       </ListItemAvatar>
       <ListItemText
         primary={
-          <Title title={pr.title} approved={approved} checked={checked} />
+          <Title
+            title={pr.title}
+            number={pr.number}
+            approved={approved}
+            checked={checked}
+          />
         }
         secondary={`${pr.org}/${pr.repo}`}
       />
