@@ -16,10 +16,9 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Check, LibraryBooks, MergeType, ThumbUp } from '@material-ui/icons'
-import { green, orange, grey } from '@material-ui/core/colors'
+import { green, orange, red, grey } from '@material-ui/core/colors'
 
 const MergeFeatureFlag = false
-const ChecksFeatureFlag = false
 
 const chipVal = date => {
   const from = moment(`${date}`)
@@ -59,15 +58,22 @@ const useStyles = makeStyles({
     fontSize: '1.1em',
     verticalAlign: 'sub',
     marginLeft: '8px',
-    color: grey[400],
+    color: props =>
+      props.checked === 'success'
+        ? green[500]
+        : props.checked === 'inProgress'
+        ? orange[500]
+        : props.checked === 'failed'
+        ? red[500]
+        : grey[400],
   },
   mergable: {
     backgroundColor: grey[400],
   },
 })
 
-const Title = ({ title, approved }) => {
-  const classes = useStyles({ approved })
+const Title = ({ title, approved, checked }) => {
+  const classes = useStyles({ approved, checked })
 
   return (
     <>
@@ -75,17 +81,16 @@ const Title = ({ title, approved }) => {
       <Tooltip title={`Approval: ${approved}`}>
         <ThumbUp className={classes.approved} />
       </Tooltip>
-      {ChecksFeatureFlag && (
-        <Tooltip title='Github Checks'>
-          <Check className={classes.checks} />
-        </Tooltip>
-      )}
+      <Tooltip title={`Github Checks: ${checked}`}>
+        <Check className={classes.checks} />
+      </Tooltip>
     </>
   )
 }
 
 export const PRListItem = ({ pr }) => {
   const [approved, setApproved] = useState('unapproved')
+  const [checked, setChecked] = useState('neutral')
 
   const classes = useStyles()
 
@@ -102,6 +107,32 @@ export const PRListItem = ({ pr }) => {
             setApproved('approved')
           }
         })
+        .catch(error => addAlert(error.toString()))
+
+      PullRequests.getPullRequest(pr)
+        .then(resp => {
+          console.log(resp)
+          return { ref: resp.head.ref, ...pr }
+        })
+        .then(resp =>
+          PullRequests.getChecks(resp)
+            .then(({ check_suites: checks }) =>
+              checks.map(({ conclusion }) => conclusion),
+            )
+            .then(conclusions => {
+              if (conclusions.includes(null)) {
+                setChecked('inProgress')
+              } else if (conclusions.includes('failure')) {
+                setChecked('failed')
+              } else if (
+                conclusions.every(
+                  (val, i, arr) => val === arr[0] && arr[0] === 'success',
+                )
+              ) {
+                setChecked('success')
+              }
+            }),
+        )
         .catch(error => addAlert(error.toString()))
     }
   }, [pr])
@@ -120,7 +151,9 @@ export const PRListItem = ({ pr }) => {
         </Badge>
       </ListItemAvatar>
       <ListItemText
-        primary={<Title title={pr.title} approved={approved} />}
+        primary={
+          <Title title={pr.title} approved={approved} checked={checked} />
+        }
         secondary={`${pr.org}/${pr.repo}`}
       />
       {MergeFeatureFlag && (
