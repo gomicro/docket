@@ -68,7 +68,7 @@ const useStyles = makeStyles({
         : grey[400],
   },
   mergable: {
-    backgroundColor: grey[400],
+    backgroundColor: props => (props.mergeable ? green[500] : grey[400]),
   },
 })
 
@@ -91,8 +91,9 @@ const Title = ({ title, approved, checked }) => {
 export const PRListItem = ({ pr }) => {
   const [approved, setApproved] = useState('unapproved')
   const [checked, setChecked] = useState('neutral')
+  const [mergeable, setMergeable] = useState(false)
 
-  const classes = useStyles()
+  const classes = useStyles({ mergeable })
 
   const { addAlert } = useContext(Context)
 
@@ -110,9 +111,9 @@ export const PRListItem = ({ pr }) => {
         .catch(error => addAlert(error.toString()))
 
       PullRequests.getPullRequest(pr)
-        .then(resp => {
-          console.log(resp)
-          return { ref: resp.head.ref, ...pr }
+        .then(({ head, mergeable_state: mergeableState }) => {
+          setMergeable(mergeableState === 'clean')
+          return { ref: head.ref, ...pr }
         })
         .then(resp =>
           PullRequests.getChecks(resp)
