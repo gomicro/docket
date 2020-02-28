@@ -4,7 +4,7 @@ import { Context } from 'context'
 import { IconButton, Snackbar } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 
-const Alert = ({ message }) => {
+const Alert = ({ message, timeout = null }) => {
   const [open, setOpen] = useState(true)
 
   const handleClose = () => {
@@ -19,6 +19,8 @@ const Alert = ({ message }) => {
         'aria-describedby': 'message-id',
       }}
       message={message}
+      autoHideDuration={timeout}
+      onClose={handleClose}
       action={
         <IconButton
           key='close'
@@ -36,5 +38,7 @@ const Alert = ({ message }) => {
 export const Alerts = () => {
   const { alerts } = useContext(Context)
 
-  return alerts.map((a, i) => <Alert message={a} key={i} />)
+  return alerts.map((a, i) => (
+    <Alert message={a.alert} key={i} timeout={a.timeout} />
+  ))
 }
