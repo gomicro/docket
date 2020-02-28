@@ -65,7 +65,12 @@ export const PRCard = () => {
 
   const updatePRs = ({ orgNames }) => {
     PullRequests.getPullRequests({ orgNames }).then(newPRs => {
-      setPRs(newPRs)
+      setPRs(
+        newPRs.map(pr => ({
+          ...pr,
+          remove: () => setPRs(newPRs.filter(p => p.id !== pr.id)),
+        })),
+      )
       setLastUpdated(moment().format('LTS'))
     })
   }
