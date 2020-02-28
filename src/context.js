@@ -15,7 +15,8 @@ export const Provider = ({ children }) => {
   const [autoRefresh, setAutoRefresh] = useState(defaultRefresh)
 
   const [alerts, setAlerts] = useState([])
-  const addAlert = alert => setAlerts(alerts.concat([alert]))
+  const addAlert = (alert, timeout = null) =>
+    setAlerts(alerts.concat([{ alert, timeout }]))
 
   const [user, setUser] = useState(null)
 
