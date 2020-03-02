@@ -24,7 +24,6 @@ export const PRCard = () => {
   const [authed, setAuthed] = useState(false)
   const [prs, setPRs] = useState([])
   const [lastUpdated, setLastUpdated] = useState(null)
-  const [loop, setLoop] = useState()
 
   const { addAlert, autoRefresh } = useContext(Context)
 
@@ -39,19 +38,21 @@ export const PRCard = () => {
   }, [authed])
 
   useEffect(() => {
-    /*
-    clearInterval(loop)
+    let interval
+
     if (!isNaN(autoRefresh) && authed) {
       Orgs.getOrgs()
         .then(orgs => {
           const names = orgs.map(o => o.login)
-          setLoop(
-            setInterval(() => updatePRs({ orgNames: names }), autoRefresh),
+          interval = setInterval(
+            () => updatePRs({ orgNames: names }),
+            autoRefresh,
           )
         })
         .catch(error => addAlert(error.toString()))
     }
-    */
+
+    return () => clearInterval(interval)
   }, [autoRefresh])
 
   const updateContents = () => {
