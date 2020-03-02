@@ -139,7 +139,7 @@ export const PRListItem = ({ pr }) => {
 
   const handleMerge = () => {
     PullRequests.mergePullRequest(pr)
-      .then(merged => addAlert(`Merged PR #${pr.number}`, 1000))
+      .then(merged => addAlert(`Merged PR #${pr.number}`, 10000))
       .then(() => pr.remove())
       .catch(error => addAlert(error.toString()))
   }
