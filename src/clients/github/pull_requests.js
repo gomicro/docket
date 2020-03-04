@@ -24,35 +24,66 @@ export class PullRequests {
     return this.searchIssues({ query: `is:open+is:pr+author:${username}` })
   }
 
-  static getPullRequests({ orgNames = [] }) {
-    return Promise.all(
-      orgNames.map(org =>
-        this.getOrgPullRequests({ org })
-          .then((items = []) => {
-            return items.map(
-              ({
-                repository_url: repoURL,
-                html_url: link,
-                title,
-                labels,
-                id,
-                number,
-                created_at: createdAt,
-              }) => ({
-                repo: repoURL.split('/').pop(),
-                link,
-                org,
-                number,
-                title,
-                labels,
-                id,
-                createdAt,
-              }),
-            )
-          })
-          .catch(() => []),
-      ),
+  static getPullRequests({ orgNames = [], username }) {
+    const promises = orgNames.map(org =>
+      this.getOrgPullRequests({ org })
+        .then((items = []) =>
+          items.map(
+            ({
+              repository_url: repoURL,
+              html_url: link,
+              title,
+              labels,
+              id,
+              number,
+              created_at: createdAt,
+            }) => ({
+              repo: repoURL.split('/').pop(),
+              link,
+              org,
+              number,
+              title,
+              labels,
+              id,
+              createdAt,
+            }),
+          ),
+        )
+        .catch(() => []),
     )
+
+    promises.push(
+      this.getUserPullRequests({ username })
+        .then((items = []) =>
+          items.map(
+            ({
+              repository_url: repoURL,
+              html_url: link,
+              title,
+              labels,
+              id,
+              number,
+              created_at: createdAt,
+            }) => ({
+              repo: repoURL.split('/').pop(),
+              link,
+              org: link
+                .split('github.com/')
+                .pop()
+                .split('/')
+                .shift(),
+              number,
+              title,
+              labels,
+              id,
+              createdAt,
+            }),
+          ),
+        )
+        .catch(() => []),
+    )
+
+    return Promise.all(promises)
       .then(results => {
         const newPRs = []
         results.forEach(r => {
