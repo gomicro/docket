@@ -2,10 +2,10 @@ import { Get, Put } from './requests'
 import { Auth } from './auth'
 
 export class PullRequests {
-  static getOrgPullRequests({ org }) {
-    const params = `q=is:open+is:pr+user:${org}`
+  static searchIssues({ query }) {
+    const params = `q=${query}`
 
-    return Get(getOrgPullRequestsEndpoint, params, Auth.appendHeaders())
+    return Get(searchIssuesEndpoint, params, Auth.appendHeaders())
       .then(({ data = {} }) => data.items)
       .catch(error => {
         if (error.response.status !== 422) {
@@ -14,6 +14,14 @@ export class PullRequests {
 
         return {}
       })
+  }
+
+  static getOrgPullRequests({ org }) {
+    return this.searchIssues({ query: `is:open+is:pr+user:${org}` })
+  }
+
+  static getUserPullRequests({ username }) {
+    return this.searchIssues({ query: `is:open+is:pr+author:${username}` })
   }
 
   static getPullRequests({ orgNames = [] }) {
@@ -106,4 +114,4 @@ export class PullRequests {
   }
 }
 
-const getOrgPullRequestsEndpoint = '/search/issues'
+const searchIssuesEndpoint = '/search/issues'
