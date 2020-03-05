@@ -85,12 +85,19 @@ export class PullRequests {
 
     return Promise.all(promises)
       .then(results => {
-        const newPRs = []
-        results.forEach(r => {
-          newPRs.push(...r)
+        const prs = []
+        results.forEach(result => {
+          prs.push(...result)
         })
-        return newPRs
+        return prs
       })
+      .then(prs =>
+        prs.reduce(
+          (unique, pr) =>
+            !unique.find(p => p.id === pr.id) ? unique.concat([pr]) : unique,
+          [],
+        ),
+      )
       .catch(error => {
         throw error
       })
