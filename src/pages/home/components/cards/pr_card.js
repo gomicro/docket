@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Context } from 'context'
 import moment from 'moment'
 
-import { Auth, Orgs, PullRequests } from '../../../../clients/github'
+import { Auth, Orgs, PullRequests, Users } from '../../../../clients/github'
 import { cardStyles } from './card_styles'
 import { GithubLogin } from '../github_login'
 import { PRList } from '../pr_list'
@@ -42,10 +42,15 @@ export const PRCard = () => {
 
     if (!isNaN(autoRefresh) && authed) {
       Orgs.getOrgs()
-        .then(orgs => {
-          const names = orgs.map(o => o.login)
+        .then(orgs => orgs.map(o => o.login))
+        .then(orgNames =>
+          Users.getUser()
+            .then(({ login }) => ({ orgNames, username: login }))
+            .catch(error => addAlert(error.toString())),
+        )
+        .then(({ orgNames, username }) => {
           interval = setInterval(
-            () => updatePRs({ orgNames: names }),
+            () => updatePRs({ orgNames, username }),
             autoRefresh,
           )
         })
@@ -57,15 +62,18 @@ export const PRCard = () => {
 
   const updateContents = () => {
     Orgs.getOrgs()
-      .then(orgs => {
-        const names = orgs.map(o => o.login)
-        updatePRs({ orgNames: names })
-      })
+      .then(orgs => orgs.map(o => o.login))
+      .then(orgNames =>
+        Users.getUser()
+          .then(({ login }) => ({ orgNames, username: login }))
+          .catch(error => addAlert(error.toString())),
+      )
+      .then(({ orgNames, username }) => updatePRs({ orgNames, username }))
       .catch(error => addAlert(error.toString()))
   }
 
-  const updatePRs = ({ orgNames }) => {
-    PullRequests.getPullRequests({ orgNames }).then(newPRs => {
+  const updatePRs = ({ orgNames, username }) => {
+    PullRequests.getPullRequests({ orgNames, username }).then(newPRs => {
       setPRs(
         newPRs.map(pr => ({
           ...pr,

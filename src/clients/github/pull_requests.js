@@ -2,10 +2,10 @@ import { Get, Put } from './requests'
 import { Auth } from './auth'
 
 export class PullRequests {
-  static getOrgPullRequests({ org }) {
-    const params = `q=is:open+is:pr+user:${org}`
+  static searchIssues({ query }) {
+    const params = `q=${query}`
 
-    return Get(getOrgPullRequestsEndpoint, params, Auth.appendHeaders())
+    return Get(searchIssuesEndpoint, params, Auth.appendHeaders())
       .then(({ data = {} }) => data.items)
       .catch(error => {
         if (error.response.status !== 422) {
@@ -16,42 +16,88 @@ export class PullRequests {
       })
   }
 
-  static getPullRequests({ orgNames = [] }) {
-    return Promise.all(
-      orgNames.map(org =>
-        this.getOrgPullRequests({ org })
-          .then((items = []) => {
-            return items.map(
-              ({
-                repository_url: repoURL,
-                html_url: link,
-                title,
-                labels,
-                id,
-                number,
-                created_at: createdAt,
-              }) => ({
-                repo: repoURL.split('/').pop(),
-                link,
-                org,
-                number,
-                title,
-                labels,
-                id,
-                createdAt,
-              }),
-            )
-          })
-          .catch(() => []),
-      ),
+  static getOrgPullRequests({ org }) {
+    return this.searchIssues({ query: `is:open+is:pr+user:${org}` })
+  }
+
+  static getUserPullRequests({ username }) {
+    return this.searchIssues({ query: `is:open+is:pr+author:${username}` })
+  }
+
+  static getPullRequests({ orgNames = [], username }) {
+    const promises = orgNames.map(org =>
+      this.getOrgPullRequests({ org })
+        .then((items = []) =>
+          items.map(
+            ({
+              repository_url: repoURL,
+              html_url: link,
+              title,
+              labels,
+              id,
+              number,
+              created_at: createdAt,
+            }) => ({
+              repo: repoURL.split('/').pop(),
+              link,
+              org,
+              number,
+              title,
+              labels,
+              id,
+              createdAt,
+            }),
+          ),
+        )
+        .catch(() => []),
     )
+
+    promises.push(
+      this.getUserPullRequests({ username })
+        .then((items = []) =>
+          items.map(
+            ({
+              repository_url: repoURL,
+              html_url: link,
+              title,
+              labels,
+              id,
+              number,
+              created_at: createdAt,
+            }) => ({
+              repo: repoURL.split('/').pop(),
+              link,
+              org: link
+                .split('github.com/')
+                .pop()
+                .split('/')
+                .shift(),
+              number,
+              title,
+              labels,
+              id,
+              createdAt,
+            }),
+          ),
+        )
+        .catch(() => []),
+    )
+
+    return Promise.all(promises)
       .then(results => {
-        const newPRs = []
-        results.forEach(r => {
-          newPRs.push(...r)
+        const prs = []
+        results.forEach(result => {
+          prs.push(...result)
         })
-        return newPRs
+        return prs
       })
+      .then(prs =>
+        prs.reduce(
+          (unique, pr) =>
+            !unique.find(p => p.id === pr.id) ? unique.concat([pr]) : unique,
+          [],
+        ),
+      )
       .catch(error => {
         throw error
       })
@@ -106,4 +152,4 @@ export class PullRequests {
   }
 }
 
-const getOrgPullRequestsEndpoint = '/search/issues'
+const searchIssuesEndpoint = '/search/issues'

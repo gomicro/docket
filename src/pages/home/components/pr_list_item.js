@@ -133,7 +133,7 @@ export const PRListItem = ({ pr }) => {
               }
             }),
         )
-        .catch(error => addAlert(error.toString()))
+        .catch(() => {})
     }
   }, [pr])
 
