@@ -18,7 +18,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Check, LibraryBooks, MergeType, ThumbUp } from '@material-ui/icons'
 import { green, orange, red, grey } from '@material-ui/core/colors'
 
-const chipVal = date => {
+const chipVal = (date) => {
   const from = moment(`${date}`)
   const now = moment(moment.now())
   const diff = now.diff(from, 'seconds')
@@ -45,7 +45,7 @@ const useStyles = makeStyles({
     fontSize: '1.1em',
     verticalAlign: 'sub',
     marginLeft: '16px',
-    color: props =>
+    color: (props) =>
       props.approved === 'approved'
         ? green[500]
         : props.approved === 'needsChanges'
@@ -56,7 +56,7 @@ const useStyles = makeStyles({
     fontSize: '1.1em',
     verticalAlign: 'sub',
     marginLeft: '8px',
-    color: props =>
+    color: (props) =>
       props.checked === 'success'
         ? green[500]
         : props.checked === 'inProgress'
@@ -66,7 +66,7 @@ const useStyles = makeStyles({
         : grey[400],
   },
   mergable: {
-    backgroundColor: props => (props.mergeable ? green[500] : grey[400]),
+    backgroundColor: (props) => (props.mergeable ? green[500] : grey[400]),
   },
 })
 
@@ -99,27 +99,27 @@ export const PRListItem = ({ pr }) => {
   useEffect(() => {
     if (pr) {
       PullRequests.getReviewStatus(pr)
-        .then(statuses => statuses.map(status => status.state))
-        .then(statuses => {
+        .then((statuses) => statuses.map((status) => status.state))
+        .then((statuses) => {
           if (statuses.includes('CHANGES_REQUESTED')) {
             setApproved('needsChanges')
           } else if (statuses.includes('APPROVED')) {
             setApproved('approved')
           }
         })
-        .catch(error => addAlert(error.toString()))
+        .catch((error) => addAlert(error.toString()))
 
       PullRequests.getPullRequest(pr)
         .then(({ head, mergeable_state: mergeableState }) => {
           setMergeable(mergeableState === 'clean')
           return { ref: head.ref, ...pr }
         })
-        .then(resp =>
+        .then((resp) =>
           PullRequests.getChecks(resp)
             .then(({ check_suites: checks }) =>
               checks.map(({ conclusion }) => conclusion),
             )
-            .then(conclusions => {
+            .then((conclusions) => {
               if (conclusions.includes(null)) {
                 setChecked('inProgress')
               } else if (conclusions.includes('failure')) {
@@ -139,9 +139,9 @@ export const PRListItem = ({ pr }) => {
 
   const handleMerge = () => {
     PullRequests.mergePullRequest(pr)
-      .then(merged => addAlert(`Merged PR #${pr.number}`, 10000))
+      .then((merged) => addAlert(`Merged PR #${pr.number}`, 10000))
       .then(() => pr.remove())
-      .catch(error => addAlert(error.toString()))
+      .catch((error) => addAlert(error.toString()))
   }
 
   return (

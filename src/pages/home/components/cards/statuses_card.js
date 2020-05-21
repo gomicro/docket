@@ -39,18 +39,18 @@ export const StatusesCard = () => {
 
   const updateContents = () => {
     Repos.getRepos()
-      .then(repos => {
-        repos.map(repo => Repos.getBranches({ slug: repo.slug })),
+      .then((repos) => {
+        repos.map((repo) => Repos.getBranches({ slug: repo.slug })),
           // setStatuses(repos)
           setLastUpdated(moment().format('LTS'))
       })
-      .catch(error => addAlert(error.toString()))
+      .catch((error) => addAlert(error.toString()))
   }
 
   const CardActions = () => {
     const [anchorEl, setAnchorEl] = useState(null)
 
-    const handleOpen = event => {
+    const handleOpen = (event) => {
       setAnchorEl(event.currentTarget)
     }
 

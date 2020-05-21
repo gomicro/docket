@@ -11,7 +11,7 @@ import {
   TextField,
 } from '@material-ui/core'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 350,
     margin: '4em auto',

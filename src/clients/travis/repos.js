@@ -10,7 +10,7 @@ export class Repos {
 
     return Get(getReposEndpoint, params, Auth.appendHeaders())
       .then(({ data }) => data.repositories)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }
@@ -24,7 +24,7 @@ export class Repos {
 
     return Get(endpoint, params, Auth.appendHeaders())
       .then(({ data }) => data)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }

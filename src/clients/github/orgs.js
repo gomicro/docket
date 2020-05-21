@@ -5,7 +5,7 @@ export class Orgs {
   static getOrgs() {
     return Get(getUsersOrgsEndpoint, undefined, Auth.appendHeaders())
       .then(({ data }) => data)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }

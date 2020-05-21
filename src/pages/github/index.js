@@ -14,8 +14,8 @@ export const Github = () => {
   }
 
   Oauth.accessToken({ code })
-    .then(token => console.log(token))
-    .catch(error => console.log(error))
+    .then((token) => console.log(token))
+    .catch((error) => console.log(error))
 
   return <></>
 }

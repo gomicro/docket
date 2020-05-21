@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-export const cardStyles = makeStyles(theme => ({
+export const cardStyles = makeStyles((theme) => ({
   card: {
     marginTop: theme.spacing(4),
 

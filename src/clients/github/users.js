@@ -5,7 +5,7 @@ export class Users {
   static getUser() {
     return Get(getUserEndpoint, undefined, Auth.appendHeaders())
       .then(({ data }) => data)
-      .catch(error => {
+      .catch((error) => {
         return error
       })
   }

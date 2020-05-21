@@ -9,7 +9,7 @@ export class Builds {
 
     return Get(getBuildsEndpoint, params, Auth.appendHeaders())
       .then(({ data }) => data.builds)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }
