@@ -7,7 +7,7 @@ export class PullRequests {
 
     return Get(searchIssuesEndpoint, params, Auth.appendHeaders())
       .then(({ data = {} }) => data.items)
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status !== 422) {
           throw error
         }
@@ -25,7 +25,7 @@ export class PullRequests {
   }
 
   static getPullRequests({ orgNames = [], username }) {
-    const promises = orgNames.map(org =>
+    const promises = orgNames.map((org) =>
       this.getOrgPullRequests({ org })
         .then((items = []) =>
           items.map(
@@ -67,11 +67,7 @@ export class PullRequests {
             }) => ({
               repo: repoURL.split('/').pop(),
               link,
-              org: link
-                .split('github.com/')
-                .pop()
-                .split('/')
-                .shift(),
+              org: link.split('github.com/').pop().split('/').shift(),
               number,
               title,
               labels,
@@ -84,21 +80,21 @@ export class PullRequests {
     )
 
     return Promise.all(promises)
-      .then(results => {
+      .then((results) => {
         const prs = []
-        results.forEach(result => {
+        results.forEach((result) => {
           prs.push(...result)
         })
         return prs
       })
-      .then(prs =>
+      .then((prs) =>
         prs.reduce(
           (unique, pr) =>
-            !unique.find(p => p.id === pr.id) ? unique.concat([pr]) : unique,
+            !unique.find((p) => p.id === pr.id) ? unique.concat([pr]) : unique,
           [],
         ),
       )
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }
@@ -108,7 +104,7 @@ export class PullRequests {
 
     return Get(endpoint, undefined, Auth.appendHeaders())
       .then(({ data }) => data)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }
@@ -118,7 +114,7 @@ export class PullRequests {
 
     return Get(endpoint, undefined, Auth.appendHeaders())
       .then(({ data }) => data)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }
@@ -133,7 +129,7 @@ export class PullRequests {
 
     return Get(endpoint, undefined, Auth.appendHeaders(headers))
       .then(({ data }) => data)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }
@@ -146,7 +142,7 @@ export class PullRequests {
 
     return Put(endpoint, undefined, Auth.appendHeaders(), body)
       .then(({ merged }) => merged)
-      .catch(error => {
+      .catch((error) => {
         throw error
       })
   }

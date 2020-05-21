@@ -2,7 +2,7 @@ import React from 'react'
 
 import { SvgIcon } from '@material-ui/core'
 
-export const TravisIcon = props => {
+export const TravisIcon = (props) => {
   return (
     <SvgIcon {...props}>
       <g fill='#403E42'>

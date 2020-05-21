@@ -5,7 +5,7 @@ import { PRCard } from './components/cards'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Container } from '@material-ui/core'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   gridContainer: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),

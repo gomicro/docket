@@ -42,11 +42,11 @@ export const PRCard = () => {
 
     if (!isNaN(autoRefresh) && authed) {
       Orgs.getOrgs()
-        .then(orgs => orgs.map(o => o.login))
-        .then(orgNames =>
+        .then((orgs) => orgs.map((o) => o.login))
+        .then((orgNames) =>
           Users.getUser()
             .then(({ login }) => ({ orgNames, username: login }))
-            .catch(error => addAlert(error.toString())),
+            .catch((error) => addAlert(error.toString())),
         )
         .then(({ orgNames, username }) => {
           interval = setInterval(
@@ -54,7 +54,7 @@ export const PRCard = () => {
             autoRefresh,
           )
         })
-        .catch(error => addAlert(error.toString()))
+        .catch((error) => addAlert(error.toString()))
     }
 
     return () => clearInterval(interval)
@@ -62,22 +62,22 @@ export const PRCard = () => {
 
   const updateContents = () => {
     Orgs.getOrgs()
-      .then(orgs => orgs.map(o => o.login))
-      .then(orgNames =>
+      .then((orgs) => orgs.map((o) => o.login))
+      .then((orgNames) =>
         Users.getUser()
           .then(({ login }) => ({ orgNames, username: login }))
-          .catch(error => addAlert(error.toString())),
+          .catch((error) => addAlert(error.toString())),
       )
       .then(({ orgNames, username }) => updatePRs({ orgNames, username }))
-      .catch(error => addAlert(error.toString()))
+      .catch((error) => addAlert(error.toString()))
   }
 
   const updatePRs = ({ orgNames, username }) => {
-    PullRequests.getPullRequests({ orgNames, username }).then(newPRs => {
+    PullRequests.getPullRequests({ orgNames, username }).then((newPRs) => {
       setPRs(
-        newPRs.map(pr => ({
+        newPRs.map((pr) => ({
           ...pr,
-          remove: () => setPRs(newPRs.filter(p => p.id !== pr.id)),
+          remove: () => setPRs(newPRs.filter((p) => p.id !== pr.id)),
         })),
       )
       setLastUpdated(moment().format('LTS'))
@@ -87,7 +87,7 @@ export const PRCard = () => {
   const CardActions = () => {
     const [anchorEl, setAnchorEl] = useState(null)
 
-    const handleOpen = event => {
+    const handleOpen = (event) => {
       setAnchorEl(event.currentTarget)
     }
 

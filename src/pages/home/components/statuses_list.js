@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import { MergeType } from '@material-ui/icons'
 
-const chipVal = date => {
+const chipVal = (date) => {
   const from = moment(`${date}`)
   const now = moment(moment.now())
   const diff = now.diff(from, 'seconds')
@@ -35,7 +35,7 @@ const chipVal = date => {
 
 export const StatusesList = ({ statuses = [] }) => (
   <List dense disablePadding>
-    {statuses.map(s => (
+    {statuses.map((s) => (
       <ListItem
         dense
         key={`${s.id}`}
@@ -48,8 +48,7 @@ export const StatusesList = ({ statuses = [] }) => (
           <MergeType />
         </ListItemIcon>
         <ListItemText primary={`#${s.slug}`} secondary={s.active} />
-        <ListItemSecondaryAction>
-        </ListItemSecondaryAction>
+        <ListItemSecondaryAction></ListItemSecondaryAction>
       </ListItem>
     ))}
   </List>

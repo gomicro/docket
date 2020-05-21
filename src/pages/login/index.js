@@ -14,7 +14,7 @@ import { GitHub } from '@material-ui/icons'
 import { Context } from 'context'
 import { Auth } from '../../clients/github'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 350,
     margin: '4em auto',
@@ -48,14 +48,14 @@ export const Login = () => {
     app
       .auth()
       .getRedirectResult()
-      .then(result => {
+      .then((result) => {
         console.log(result)
         if (result.credential) {
           var token = result.credential.accessToken
           console.log(token)
         }
       })
-      .catch(error => addAlert(error))
+      .catch((error) => addAlert(error))
   }, [user])
 
   const handleAuth = () => {

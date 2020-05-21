@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core'
 import { Autorenew } from '@material-ui/icons'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   autoRefreshButton: {
     marginRight: theme.spacing(1),
   },
@@ -20,7 +20,7 @@ export const AutoRefreshMenu = () => {
 
   const { setAutoRefresh } = useContext(Context)
 
-  const handleClickListItem = event => {
+  const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget)
   }
 
@@ -65,7 +65,7 @@ export const AutoRefreshMenu = () => {
             key={option}
             disabled={index === 0}
             selected={index === selectedIndex}
-            onClick={event => handleMenuItemClick(event, index)}
+            onClick={(event) => handleMenuItemClick(event, index)}
           >
             {option}
             {index > 1 && ' Minutes'}

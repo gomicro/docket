@@ -42,8 +42,8 @@ export class Oauth {
       headers,
       body.toString(),
     )
-      .then(resp => resp.access_token)
-      .catch(error => {
+      .then((resp) => resp.access_token)
+      .catch((error) => {
         throw error
       })
   }
