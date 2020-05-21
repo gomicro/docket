@@ -13,7 +13,7 @@ export const cardStyles = makeStyles(theme => ({
   },
   cardContent: {
     padding: 0,
-    maxHeight: '40vh',
+    maxHeight: '90vh',
     overflow: 'scroll',
   },
 }))
