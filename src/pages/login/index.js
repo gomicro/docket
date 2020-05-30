@@ -1,18 +1,10 @@
 import React, { useContext, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Button,
-  TextField,
-} from '@material-ui/core'
+import { Card, CardActions, CardContent, Button } from '@material-ui/core'
 import { GitHub } from '@material-ui/icons'
 
 import { Context } from 'context'
-import { Auth } from '../../clients/github'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -39,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const Login = () => {
-  const history = useHistory()
   const classes = useStyles()
 
   const { app, addAlert, user } = useContext(Context)
