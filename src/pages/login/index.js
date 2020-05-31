@@ -1,10 +1,8 @@
-import React, { useContext, useEffect } from 'react'
+import React from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { Card, CardActions, CardContent, Button } from '@material-ui/core'
 import { GitHub } from '@material-ui/icons'
-
-import { Context } from 'context'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -33,28 +31,6 @@ const useStyles = makeStyles((theme) => ({
 export const Login = () => {
   const classes = useStyles()
 
-  const { app, addAlert, user } = useContext(Context)
-
-  useEffect(() => {
-    app
-      .auth()
-      .getRedirectResult()
-      .then((result) => {
-        console.log(result)
-        if (result.credential) {
-          var token = result.credential.accessToken
-          console.log(token)
-        }
-      })
-      .catch((error) => addAlert(error))
-  }, [user])
-
-  const handleAuth = () => {
-    const provider = new app.firebase_.auth.GithubAuthProvider()
-    provider.addScope('repo')
-    app.auth().signInWithRedirect(provider)
-  }
-
   return (
     <Card className={classes.card}>
       <CardContent className={classes.loginContent}>
@@ -65,7 +41,6 @@ export const Login = () => {
           className={classes.loginButton}
           variant='contained'
           color='primary'
-          onClick={handleAuth}
         >
           Login
         </Button>
