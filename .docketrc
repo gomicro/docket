@@ -1,0 +1,7 @@
+{
+	"statuses": [{
+		"name": "prod",
+		"branch": "master",
+		"endpoint": "https://docket.gomicro.io/status",
+	}]
+}
