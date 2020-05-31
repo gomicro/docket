@@ -2,6 +2,8 @@
 SHELL = bash
 
 APP := $(shell basename $(PWD) | tr '[:upper:]' '[:lower:]')
+GITHUB_SHA ?= $(shell git rev-parse HEAD)
+GIT_COMMIT_HASH := $(GITHUB_SHA)
 
 GH_URL := 'https://api.github.com'
 TR_URL := 'https://api.travis-ci.com'
@@ -16,6 +18,7 @@ all: test
 build: clean ## Build the project
 	GH_URL=$(GH_URL) \
 	TR_URL=$(TR_URL) \
+	GIT_COMMIT_HASH=$(GIT_COMMIT_HASH) \
 	npx webpack -p
 
 .PHONY: clean
@@ -32,6 +35,7 @@ deploy: ## Deploy the generated site
 dev: ## Run the dev test server
 	@GH_URL=$(GH_URL) \
 	TR_URL=$(TR_URL) \
+	GIT_COMMIT_HASH=$(GIT_COMMIT_HASH) \
 	npx webpack-dev-server --port 8080 --hot --progress --host 0.0.0.0
 
 .PHONY: help
