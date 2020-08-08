@@ -20,5 +20,8 @@ export const App = () => (
 const GlobalStyle = createGlobalStyle`
   html, body, #root {
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
 `

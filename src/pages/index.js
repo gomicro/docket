@@ -2,6 +2,7 @@ import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
 import { Header } from '../components/header'
+import { Footer } from '../components/footer'
 
 import { Home } from './home'
 import { Logout } from './logout'
@@ -20,5 +21,6 @@ export const Pages = () => (
       <Route path='/404' component={NotFound} />
       <Route component={() => <Redirect to='/404' />} />
     </Switch>
+    <Footer />
   </>
 )
