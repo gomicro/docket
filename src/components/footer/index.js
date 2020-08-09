@@ -16,39 +16,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Copyright = () => (
-  <Typography variant='body2' color='textSecondary' align='center'>
-    {'Copyright © Gomicro '}
-    {new Date().getFullYear()}
-  </Typography>
-)
-
-const Version = () => (
-  <Typography variant='body2' color='textSecondary' align='center'>
-    {GIT_COMMIT_HASH.substring(0, 8)}
-  </Typography>
-)
-
-const Tagline = () => (
-  <Typography
-    variant='subtitle1'
-    align='center'
-    color='textSecondary'
-    component='p'
-  >
-    See what's next on the docket.
-  </Typography>
-)
-
 export const Footer = () => {
   const classes = useStyles()
 
   return (
     <footer className={classes.footer}>
       <Container maxWidth='lg'>
-        <Tagline />
-        <Version />
-        <Copyright />
+        <Typography variant='body2' color='textSecondary' align='center'>
+          {'Copyright © Gomicro '}
+          {new Date().getFullYear()} &mdash; {GIT_COMMIT_HASH.substring(0, 8)}
+        </Typography>
       </Container>
     </footer>
   )
