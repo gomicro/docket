@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 
 import { Header } from '../components/header'
 import { Footer } from '../components/footer'
+import { NavDrawer } from '../components/navdrawer'
 
 import { Home } from './home'
 import { Logout } from './logout'
@@ -11,6 +12,7 @@ import { NotFound } from './not_found'
 
 export const Pages = () => (
   <>
+    <NavDrawer />
     <Header />
     <Switch>
       <Route exact path='/' component={Home} />

@@ -1,9 +1,9 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
 
-import { Provider } from './context'
 import { Alerts } from './components/alerts'
 import { Pages } from './pages'
+import { Provider } from './context'
 
 export const App = () => (
   <>
