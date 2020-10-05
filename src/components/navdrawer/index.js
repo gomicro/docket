@@ -14,8 +14,8 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  // Info,
   // Settings,
+  Info,
   List as ListIcon,
   ChevronLeft,
 } from '@material-ui/icons'
@@ -24,13 +24,7 @@ const nav = [
   {
     links: [
       { to: '/', primary: 'PR List', icon: ListIcon },
-      /*
-      {
-        to: '/about',
-        primary: 'About',
-        icon: Info,
-      },
-      */
+      { to: '/about', primary: 'About', icon: Info },
     ],
   },
   /*
