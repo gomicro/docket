@@ -22,6 +22,7 @@ import { ExitToApp, GitHub, MoreVert, Refresh } from '@material-ui/icons'
 
 export const PRCard = () => {
   const [authed, setAuthed] = useState(false)
+  const [fetching, setFetching] = useState(false)
   const [prs, setPRs] = useState([])
   const [lastUpdated, setLastUpdated] = useState(null)
 
@@ -61,6 +62,7 @@ export const PRCard = () => {
   }, [autoRefresh])
 
   const updateContents = () => {
+    setFetching(true)
     Orgs.getOrgs()
       .then((orgs) => orgs.map((o) => o.login))
       .then((orgNames) =>
@@ -70,6 +72,7 @@ export const PRCard = () => {
       )
       .then(({ orgNames, username }) => updatePRs({ orgNames, username }))
       .catch((error) => addAlert(error.toString()))
+    setFetching(false)
   }
 
   const updatePRs = ({ orgNames, username }) => {
@@ -151,7 +154,11 @@ export const PRCard = () => {
         action={<CardActions />}
       />
       <CardContent className={classes.cardContent}>
-        {authed ? <PRList prs={prs} /> : <GithubLogin setAuthed={setAuthed} />}
+        {authed ? (
+          <PRList prs={prs} fetching={fetching} />
+        ) : (
+          <GithubLogin setAuthed={setAuthed} />
+        )}
       </CardContent>
     </Card>
   )
