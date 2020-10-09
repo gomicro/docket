@@ -20,7 +20,7 @@ export const PRList = ({ prs = [] }) => {
   const classes = useStyles()
 
   return (
-    <List dense disablePadding>
+    <List dense>
       {(prs.length === 0 && <NoPRs className={classes.noPRs} />) ||
         prs.map((pr) => (
           <PRListItem key={`${pr.org}:${pr.repo}:${pr.id}`} pr={pr} />
