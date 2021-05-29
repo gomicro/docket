@@ -18,7 +18,13 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core'
-import { ExitToApp, GitHub, MoreVert, Refresh } from '@material-ui/icons'
+import {
+  ExitToApp,
+  GitHub,
+  MoreVert,
+  Refresh,
+  MergeType,
+} from '@material-ui/icons'
 
 export const PRCard = () => {
   const [authed, setAuthed] = useState(false)
@@ -84,6 +90,12 @@ export const PRCard = () => {
     })
   }
 
+  const mergeAll = () => {
+    prs.forEach((pr) => {
+      console.log(pr)
+    })
+  }
+
   const CardActions = () => {
     const [anchorEl, setAnchorEl] = useState(null)
 
@@ -122,6 +134,12 @@ export const PRCard = () => {
               <Refresh />
             </ListItemIcon>
             Refresh
+          </MenuItem>
+          <MenuItem onClick={mergeAll}>
+            <ListItemIcon>
+              <MergeType />
+            </ListItemIcon>
+            Merge All
           </MenuItem>
           <Divider />
           <MenuItem onClick={handleLogout}>
