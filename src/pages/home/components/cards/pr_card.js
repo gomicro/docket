@@ -18,7 +18,13 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core'
-import { ExitToApp, GitHub, MoreVert, Refresh } from '@material-ui/icons'
+import {
+  ExitToApp,
+  GitHub,
+  MoreVert,
+  Refresh,
+  MergeType,
+} from '@material-ui/icons'
 
 export const PRCard = () => {
   const [authed, setAuthed] = useState(false)
@@ -74,13 +80,33 @@ export const PRCard = () => {
 
   const updatePRs = ({ orgNames, username }) => {
     PullRequests.getPullRequests({ orgNames, username }).then((newPRs) => {
-      setPRs(
-        newPRs.map((pr) => ({
-          ...pr,
-          remove: () => setPRs(newPRs.filter((p) => p.id !== pr.id)),
-        })),
-      )
+      setPRs(augmentPRs(newPRs))
       setLastUpdated(moment().format('LTS'))
+    })
+  }
+
+  const augmentPRs = (newPRs) =>
+    newPRs.map((pr) => {
+      const handleMerge = () => {
+        PullRequests.mergePullRequest(pr)
+          .then((merged) => addAlert(`Merged PR #${pr.number}`, 10000))
+          .then(() => handleRemove())
+          .catch((error) => addAlert(error.toString()))
+      }
+
+      const handleRemove = () =>
+        setPRs(augmentPRs(newPRs.filter((p) => p.id !== pr.id)))
+
+      return {
+        ...pr,
+        merge: handleMerge,
+        remove: handleRemove,
+      }
+    })
+
+  const mergeAll = () => {
+    prs.forEach((pr) => {
+      pr.merge()
     })
   }
 
@@ -122,6 +148,12 @@ export const PRCard = () => {
               <Refresh />
             </ListItemIcon>
             Refresh
+          </MenuItem>
+          <MenuItem onClick={mergeAll}>
+            <ListItemIcon>
+              <MergeType />
+            </ListItemIcon>
+            Merge All
           </MenuItem>
           <Divider />
           <MenuItem onClick={handleLogout}>
