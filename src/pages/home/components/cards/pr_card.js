@@ -80,19 +80,33 @@ export const PRCard = () => {
 
   const updatePRs = ({ orgNames, username }) => {
     PullRequests.getPullRequests({ orgNames, username }).then((newPRs) => {
-      setPRs(
-        newPRs.map((pr) => ({
-          ...pr,
-          remove: () => setPRs(newPRs.filter((p) => p.id !== pr.id)),
-        })),
-      )
+      setPRs(augmentPRs(newPRs))
       setLastUpdated(moment().format('LTS'))
     })
   }
 
+  const augmentPRs = (newPRs) =>
+    newPRs.map((pr) => {
+      const handleMerge = () => {
+        PullRequests.mergePullRequest(pr)
+          .then((merged) => addAlert(`Merged PR #${pr.number}`, 10000))
+          .then(() => handleRemove())
+          .catch((error) => addAlert(error.toString()))
+      }
+
+      const handleRemove = () =>
+        setPRs(augmentPRs(newPRs.filter((p) => p.id !== pr.id)))
+
+      return {
+        ...pr,
+        merge: handleMerge,
+        remove: handleRemove,
+      }
+    })
+
   const mergeAll = () => {
     prs.forEach((pr) => {
-      console.log(pr)
+      pr.merge()
     })
   }
 
