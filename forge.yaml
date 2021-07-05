@@ -1,0 +1,62 @@
+project:
+  name: docket
+aliases:
+  linters:
+    help: Run linting and formatting
+    steps:
+    - lint
+    - fmt
+  test:
+    help: Run all tests
+    steps:
+    - integration_test
+    - unit_test
+    - selenium_test
+steps:
+  build:
+    help: Build the project
+    envs:
+      API_ENDPOINT: "http://localhost:4567"
+    cmd: npx webpack --progress
+  dev:
+    help: Run the dev test server
+    envs:
+      API_ENDPOINT: "http://localhost:4567"
+    cmd: npx webpack serve
+  fmt:
+    help: Run formatting
+    cmd: npx prettier -w src
+  install:
+    help: Install npm dependencies
+    cmd: npm install
+  integration_test:
+    help: Run all integration tests
+    cmd: npx jest --config=jest.integration.config.js
+  lint:
+    help: Run linting
+    cmd: npx eslint src/ ./*.js --ext .js
+  run:
+    help: Run the full UI environment
+    cmds:
+    - docker-compose up --build -d
+    - echo "Checking exited poorly"; if [[ -n "$(docker ps -a --format "{{.Names}}
+      {{.Status}}" | grep "^frontend_.* Exited" | grep -v "Exited (0)")" ]]; then
+      echo "One of the containers exited poorly"; exit 1; fi
+    - timeout=120; while [[ "$(docker ps -a --format "{{.Names}} {{.Status}}" | grep
+      "^frontend_" | grep -v \(healthy\) | grep -v Exited )" && $timeout -gt 0 ]];
+      do echo -n "."; sleep 1; let $(( timeout-- )); done; if [[ $timeout == 0 ]];
+      then echo "reached timeout"; exit 1; fi
+  selenium_test:
+    help: Run all selenium tests
+    envs:
+      BASE_URL: "http://localhost:8001"
+    cmd: npx wdio ./wdio.conf.js
+  stop:
+    help: Stop the UI environment
+    cmd: docker-compose down
+  story:
+    help: Run storybook
+    cmd: npx start-storybook -p 9001 -c .storybook
+  unit_test:
+    help: Run all unit tests
+    cmd: npx jest --config=jest.unit.config.js
